@@ -1,0 +1,10 @@
+../progs.dat
+
+defs.qc
+math.qc
+subs.qc
+misc.qc
+main.qc
+client.qc
+dummys.qc
+misc/impulses.qc

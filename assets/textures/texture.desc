@@ -1,0 +1,11 @@
+Texture Folder Descriptions:
+
+- gamedev.wad: The WAD file containing all the textures included in this pack, read to be used with
+a map editor or erics_tools qbsp map compiler.
+
+- Brush: different brush textures used for the map editor and compiler. Look at the Quake Mod wiki
+for a proper description of them. The trigger textures are not used by the compiler, but are a good
+way to tell the difference between real geometry and trigger geometry
+
+- Liquids: Different types of liquids used by the quake engine. These are just gamedev test textures
+for easy prototyping. Probably won't replace them.

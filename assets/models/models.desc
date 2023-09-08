@@ -1,0 +1,6 @@
+Model Folder Descriptions:
+
+- Null: These are assets required by the Quake engine to even run the engine. All assets in this 
+folder are just simple cube models. If you want to replace them, you can, but if you're going for
+a total conversion, you might just not want to mess with these. They will not be supported in
+the QuakeC code.

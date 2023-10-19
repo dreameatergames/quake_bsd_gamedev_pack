@@ -1,0 +1,4 @@
+Texture Folder Descriptions:
+
+- fonts: a template for custom fonts. Must be stored as conchars.lmp in the wad file.
+use conchars_replace.png on how to add it to a wad file correctly

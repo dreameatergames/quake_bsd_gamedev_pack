@@ -7,11 +7,11 @@ Right now, it's really just the barest of bones of QuakeC code, but we soon hope
 
 ### Mandatory:
 - Make Player and Enemy Model
-- Make Example Level
+- Make Example Levels (partially done)
 - Document assets thoroughly (for easy coding)
 - Make one first person project, and one 3rd person project
 - Make Platforms
-- Code QuakeC stuff
+- Code QuakeC stuff (SOON!)
 - Make Codebase compatible with Vanilla Quake
 
 ### Optional:
@@ -20,5 +20,5 @@ Right now, it's really just the barest of bones of QuakeC code, but we soon hope
 - Make Dreamcast compatible version
 
 Credits:
-David Croshaw
-RennyC (Thanks to RennyC for the initial Code)
+- David Croshaw
+- RennyC (Thanks to RennyC for the initial Code)

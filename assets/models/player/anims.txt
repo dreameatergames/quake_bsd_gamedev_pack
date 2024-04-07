@@ -1,0 +1,10 @@
+1-55 Attack 1
+56-88 Attack 2
+89-131 Attack 3
+132-153 Idle 1
+154-225 Idle 2
+226-280 Jump
+281-325 Run
+326-408 Walk
+409-447 Death 1
+448-535 Death 2

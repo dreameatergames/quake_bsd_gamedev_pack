@@ -4,3 +4,8 @@ Model Folder Descriptions:
 folder are just simple cube models. If you want to replace them, you can, but if you're going for
 a total conversion, you might just not want to mess with these. They will not be supported in
 the QuakeC code.
+
+- Player: The player model. Has the Blender project file (player.blend), the model exported from
+blender (player_blender.mdl), the QME editor model for fixing the Blender rotation (player_qme.mdl)
+and the final model (player.mdl). It also contains a file for all the keyframe numbers for 
+animations, so you can easily reference them instead of having to pick them apart manually in Blender.

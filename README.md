@@ -6,12 +6,12 @@ Right now, it's really just the barest of bones of QuakeC code, but we soon hope
 ## ToDo:
 
 ### Mandatory:
-- Make Player and Enemy Model
+- Make Enemy Model
 - Make Example Levels (partially done)
 - Document assets thoroughly (for easy coding)
 - Make one first person project, and one 3rd person project
 - Make Platforms
-- Code QuakeC stuff (SOON!)
+- Change the RennyC Envenom total conversion code to a generic starting base code
 - Make Codebase compatible with Vanilla Quake
 
 ### Optional:

@@ -11,7 +11,7 @@ Right now, it's really just the barest of bones of QuakeC code, but we soon hope
 - Document assets thoroughly (for easy coding)
 - Make one first person project, and one 3rd person project
 - Make Platforms
-- Change the RennyC Envenom total conversion code to a generic starting base code
+- Change the RennyC Envenom total conversion code to a generic FPS starting base code
 - Make Codebase compatible with Vanilla Quake
 
 ### Optional:

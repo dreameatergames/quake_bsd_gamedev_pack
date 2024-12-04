@@ -22,3 +22,4 @@ Right now, it's really just the barest of bones of QuakeC code, but we soon hope
 Credits:
 - David Croshaw
 - RennyC (Thanks to RennyC for the initial Code)
+- Andrew Hildebrand

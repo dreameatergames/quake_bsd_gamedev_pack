@@ -1,0 +1,17 @@
+Obtain and Compile qpackman
+
+Use WSL2 to run this command:
+qpakman -pic gfx-wad/*.png -o gfx.wad
+
+Then In Windows:
+Open WAD file in TexMex and click Edit->New Item->Status Picture
+
+Put in 128x128 and click the constrained box
+
+Click on the picture you just created
+
+Right click and select load picture
+
+Load your personal conchars.bmp
+
+Click File->Save

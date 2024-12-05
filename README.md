@@ -23,3 +23,4 @@ Credits:
 - David Croshaw
 - RennyC (Thanks to RennyC for the initial Code)
 - Andrew Hildebrand
+- Lavender.pet and LibreQuake

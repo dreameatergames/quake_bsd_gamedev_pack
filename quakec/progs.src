@@ -1,10 +1,43 @@
-../progs.dat
+/*
++-----+
+|Progs|
++-----+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+| Scratch                                      Http://www.admdev.com/scratch |
++=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
+| This file contains all a list of QuakeC files to compile into the final    |
+| output file (progs.dat by default)                                         |
++=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
+*/
 
-defs.qc
-math.qc
-subs.qc
-misc.qc
-main.qc
-client.qc
-dummys.qc
-misc/impulses.qc
+../progs.dat                                        // Output File
+
+Defs.QC                                             // Definitions
+Main.QC                                             // Main subroutines
+Ai.QC
+Damage.QC
+Subs.QC
+Player.QC
+Client.QC                                           // Client subroutines
+Pickups.QC
+Weapons.QC
+Triggers.QC
+Misc.QC
+Doors.QC
+Buttons.QC
+Plats.QC
+Music.QC
+Dummys.QC                                           // Null spawn functions
+
+//Monsters
+//Worm.QC
+NhZombie.QC // Headless Zombie after head is blown off
+Zombie.QC
+//Baeloth.QC
+//Vile.QC
+//Soldier.QC // monster that helps the player
+//Boss1.QC
+
+// cutscene stuff
+//Actor_Viles.QC
+//Actor_DeadSoldier.QC
+//Cutscenes.QC

@@ -1,15 +1,17 @@
-//+----+
-//|Defs|
-//+----+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
-//| Scratch                                      Http://www.admdev.com/scratch |
-//+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
-//| This contains necessary definitions from the original V1.06 defs.qc file.  |
-//| This includes some basic constants, the built in function definitions, and |
-//| some variable's used by the Quake Engine internally.                       |
-//| Certain lines in this file are hardcoded into Quake engine, and -must- be  |
-//| present and unchanged, in the order they are shown. Otherwise Quake will   |
-//| refuse to run.                                                             |
-//+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
+/*
++----+
+|Defs|
++----+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
+| Scratch                                      Http://www.admdev.com/scratch |
++=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
+| This contains necessary definitions from the original V1.06 defs.qc file.  |
+| This includes some basic constants, the built in function definitions, and |
+| some variable's used by the Quake Engine internally.                       |
+| Certain lines in this file are hardcoded into Quake engine, and -must- be  |
+| present and unchanged, in the order they are shown. Otherwise Quake will   |
+| refuse to run.                                                             |
++=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
+*/
 
 // These lines CANNOT be altered/moved
 entity          self;
@@ -121,6 +123,7 @@ void		end_sys_globals;		// flag for structure dumping
 .string		message;		// trigger messages
 .float		sounds;		// either a cd track number or sound number
 .string         noise, noise1, noise2, noise3;  // contains names of wavs to play
+entity	damage_attacker;	// set by T_Damage
 
 void		end_sys_fields;			// flag for structure dumping
 // End. Lines below this MAY be altered, to some extent
@@ -167,7 +170,7 @@ vector(entity e, float speed) aim		= #44;		// returns the shooting vector
 float(string s) cvar				= #45;		// return cvar.value
 void(string s) localcmd				= #46;		// put string into local que
 entity(entity e) nextent			= #47;		// for looping through all ents
-void() ChangeYaw 				= #49;		// turn towards self.ideal_yaw
+//void() ChangeYaw 				= #49;		// turn towards self.ideal_yaw
 vector(vector v) vectoangles			= #51;
 void(float to, float f) WriteByte		= #52;
 void(float to, float f) WriteChar		= #53;
@@ -238,11 +241,11 @@ float	SOLID_SLIDEBOX			= 3;	// touch on edge, but not an onground
 float	SOLID_BSP				= 4;	// bsp clip, touch on edge, block
 
 // range values
-float	RANGE_CLOSE				= 0;
-float	RANGE_MELEE				= 1;
-float	RANGE_NEAR				= 2;
-float	RANGE_MID				= 3;
-float	RANGE_FAR				= 4;
+float	RANGE_MELEE				= 0;
+float	RANGE_NEAR				= 1;
+float	RANGE_MID				= 2;
+float	RANGE_FAR				= 3;
+float	RANGE_CLOSE				= 4;
 
 // deadflag values
 
@@ -276,6 +279,8 @@ float   CONTENT_SKY                     = -6;
 
 float   STATE_RAISED            = 0;
 float   STATE_LOWERED           = 1;
+float	STATE_TOP		= 0;
+float	STATE_BOTTOM	= 1;
 float	STATE_UP		= 2;
 float	STATE_DOWN		= 3;
 
@@ -344,6 +349,7 @@ float	CHAN_WEAPON		= 1;
 float	CHAN_VOICE		= 2;
 float	CHAN_ITEM		= 3;
 float	CHAN_BODY		= 4;
+float CHAN_MUSIC        = 5;
 
 float	ATTN_NONE		= 0;
 float	ATTN_NORM		= 1;
@@ -376,19 +382,112 @@ float	AS_SLIDING		= 2;
 float	AS_MELEE		= 3;
 float	AS_MISSILE		= 4;
 
-void() SUB_Null2 = {};
+float	IT_DEADSIGN					= 524288; // DEAD Sign in GFX.WAD
 
 // Quake assumes these are defined.
 entity activator;
 string string_null;    // null string, nothing should be held here
 
 .string         wad, map;
-.float worldtype, delay, wait, lip, light_lev, speed, style, skill;
+.float worldtype, delay, wait, lip, light_lev, speed, style;
 .string killtarget;
 .vector pos1, pos2, mangle;
 
 void(vector o, vector d, float color, float count) particle = #48;// start a particle effect
+void() ChangeYaw = #49;						// turn towards self.ideal_yaw
 void(string s) bprint				= #23;
 void(entity client, string s) sprint		= #24;
-void() SUB_Remove = {remove(self);};
 // End
+.string		message2;		// secondary trigger messages
+
+float skill;
+
+.float zombie_onground;  // spawn flag whether or not zombie starts off laying on the ground
+				 // 1 = get up and attack
+				 // 2 = stay dead (level detail)
+.float weapon;
+.float lock_finished;
+.float turnlock_finished; // stop left/right keys from functioning
+.float pain_finished;
+.float dbltime;
+.float runmode;
+
+//Weapons
+float W_MELEE = 4096;
+float W_PISTOL = 1;
+float W_SHOTGUN = 2;
+float W_ASSAULT = 4;
+
+//Ammo
+.float ammo_nails, ammo_shells;
+float	IT_SHELLS = 256;
+float	IT_NAILS = 512;
+
+float KEY_UP = 1;
+float KEY_DOWN = 2;
+float KEY_LEFT = 4;
+float KEY_RIGHT = 8;
+
+.float state;
+.float speed; // monster movement speed
+.entity char;                              // FrikaC
+.void() ch_run;                            // FrikaC
+.float walkframe;                          // FrikaC
+.vector test_org;
+.float keyflags;
+.entity crossx; // cross hair
+.float bullettype;
+.float deathtype; // which death to use
+			// 0 = normal
+			// 1 = decapitation
+.string teams; // important string, used for AI to check if monsters are on the same team
+               // and if they should attack each other or not
+.float cnt; // counter
+.float chips; // which chips corporals found
+.float flashjuice;
+float IT_CHIP1 = 1; // flashlight chip
+float IT_CHIP2 = 1; // aiming sys chip
+.float hostile_finished; // for strafing enemies
+.float pistol_shots;
+.float shotgun_shots;
+.float flashlight_flag;
+.float voice_finished; // if voices can be played
+.float ladder_finished; // ladder climbing flag
+.float noladder_finished;
+.entity attacker; // which enemy is attacking
+.float usebutton_finished; // used to open doors, pick up items, push buttons, etc..
+.float heal_uses; // how many health kits is he using
+.float heal_amount; // amount to heal by
+.float heal_finished; // timer for how often his health goes up a point
+.float cam_style; // different ways the camera tracks
+
+ // corporal orders soldiers around
+.float orders;
+float AI_FOLLOW = 0;
+float AI_WAIT = 1;
+
+// used for grabbing items off floor
+.float pickup_finished;
+.float getitem_finished;
+
+float	IT_KEY1					= 131072;
+float	IT_KEY2					= 262144;
+
+float() crandom =
+{
+	return 2*(random() - 0.5);
+};
+
+float developer;
+.float closed; // boolean for if a door is permanently shut
+.float musicstate;
+.float alpha; // transparency for supported engines
+float story; // global variable for which cutscene to play
+
+//title screen stuff
+.float mode;
+.float active;
+float title1_finished;
+.entity lock_view;
+float cutscene; // on/off
+.float fixviewsize; // fixes the sbar displaying before widescreen is finished

@@ -1,43 +1,33 @@
-/*
-+-----+
-|Progs|
-+-----+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
-| Scratch                                      Http://www.admdev.com/scratch |
-+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
-| This file contains all a list of QuakeC files to compile into the final    |
-| output file (progs.dat by default)                                         |
-+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
-*/
+// +-----+
+// |Progs|
+// +-----+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-+
+// | Scratch                                   Http://www.admdev.com/scratch |
+// +=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-+
+// | This file contains all a list of QuakeC files to compile into the final |
+// | output file (progs.dat by default)                                      |
+// +=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-+
+
 
 ../progs.dat                                        // Output File
 
 Defs.QC                                             // Definitions
+Subs.qc                                             // Math Stuff
 Main.QC                                             // Main subroutines
-Ai.QC
-Damage.QC
-Subs.QC
-Player.QC
+
 Client.QC                                           // Client subroutines
-Pickups.QC
-Weapons.QC
-Triggers.QC
-Misc.QC
-Doors.QC
-Buttons.QC
-Plats.QC
-Music.QC
-Dummys.QC                                           // Null spawn functions
 
-//Monsters
-//Worm.QC
-NhZombie.QC // Headless Zombie after head is blown off
-Zombie.QC
-//Baeloth.QC
-//Vile.QC
-//Soldier.QC // monster that helps the player
-//Boss1.QC
+ai.qc                                               // Monster ai
+doors.qc
+damage.qc                                           // Damage Math
+buttons.qc                                          // Buttons
+weapons.qc
 
-// cutscene stuff
-//Actor_Viles.QC
-//Actor_DeadSoldier.QC
-//Cutscenes.QC
+plats.qc                                            // Moving Platforms
+triggers.qc                                         // Entity Triggers
+
+
+
+// Dummys.QC                                           // Null spawn functions
+Entities/Internal.QC                                // Entity Management
+Entities/Lights.QC                                  // Light Entities
+Entities/Ambient.QC                                 // Ambient Sounds

@@ -469,10 +469,6 @@ void() ChangeWeapons =
 {
 	local	float	it, fl;
 
-	if (self.battle_ready == TRUE || self.char.deadflag == DEAD_DEAD || self.lock_finished > time ||
-	    self.char.ladder_finished > time)
-		return;
-
 	it = self.items;
 	
 	if (self.impulse == 1)
@@ -523,10 +519,6 @@ void() ChangeWeapons =
 void() CycleWeaponCommand =
 {
 	local	float	it;
-
-	if (self.battle_ready == TRUE || self.char.deadflag == DEAD_DEAD || self.lock_finished > time ||
-	    self.char.ladder_finished > time)
-		return;
 
 	it = self.items;
 	self.impulse = 0;
@@ -587,7 +579,6 @@ void() reload =
 				self.armorvalue = self.pistol_shots;
 				W_SetCurrentAmmo();
 				self.lock_finished = time + 1;
-				self.char.think = player_reloada1;
 			}
 		}
 	}
@@ -599,7 +590,6 @@ void() reload =
 				self.lock_finished = time + 0.4;
 			else
 				self.lock_finished = time + 1; // allow corporal's reload animation to insert shell before firing again
-			self.char.think = player_reloadb1;
 		}
 	}	
 };
@@ -649,53 +639,15 @@ void() checkuse =
 		}
 		
 		self.lock_finished = time + 0.2;
-		self.char.think = player_usedoor1;
 		self.char.nextthink = time + 0.1;
 	}
 	else if (trace_ent.classname == "button")
 	{
 		self.lock_finished = time + 0.2;
-		self.char.think = player_usebutton1;
 		self.char.nextthink = time + 0.1;
-	}
-	else if (trace_ent.classname == "info_generator")
-	{
-		self.lock_finished = time + 0.2;
-		self.char.think = player_usedoor1;
-		self.char.nextthink = time + 0.1;
-		if (trace_ent.frame == 3)
-			trace_ent.nextthink = time + 0.4;
-	}
-	else if (trace_ent.classname == "info_clipboard")
-	{
-		centerprint (self, trace_ent.message);
-		if (self.lock_finished < time)
-		{
-			self.lock_finished = time + 0.5;
-			playsound (self, CHAN_AUTO, "misc/pageturn.wav", 1, ATTN_NORM);
-		}
-	}
-	else if (trace_ent.classname == "soldier") // soldier orders from corporal
-	{
-		if (self.order_finished > time) return;
-		else self.order_finished = time + 1;
-
-		if (trace_ent.orders == AI_FOLLOW)
-		{
-			sound (self, CHAN_VOICE, "player/order1.wav", 1, ATTN_NORM);
-			sprint (self, "Corporal: Wait here for me to return.\n");
-			trace_ent.orders = AI_WAIT;
-		}
-		else
-		{
-			sound (self, CHAN_VOICE, "player/order2.wav", 1, ATTN_NORM);
-			sprint (self, "Corporal: Follow closely, we're moving out.\n");
-			trace_ent.orders = AI_FOLLOW;
-		}
 	}
 };
 
-// corporal uses a health kit
 void() checkheal =
 {
 	local string h;
@@ -735,8 +687,6 @@ void() CheckImpulses =
 
 	if (self.impulse >= 1 && self.impulse <= 4)
 		ChangeWeapons ();
-	if (self.impulse == 10)
-		flashlight_switch();
 	if (self.impulse == 11)
 		reload ();
 	if (self.impulse == 12)
@@ -747,23 +697,13 @@ void() CheckImpulses =
 		if (self.button2 && self.lock_finished < time)
 		{
 			self.lock_finished = time + 0.2;
-			self.char.think = player_pickup1;
 			self.char.nextthink = time + 0.1;
 		}
 	}
 	if (self.button2) // use button
 	{
-		if (self.char.ladder_finished > time)
-		{
-			if (!self.stopkey) // debounce key flag
-			{
-				self.noladder_finished = time + 3;
-				self.char.think = Player_Fall;
-				self.char.nextthink = time + 0.1;
-				self.stopkey = TRUE;
-				return;
-			}
-		}
+
+
 		if (self.lock_finished < time)
 		{
 			checkuse();

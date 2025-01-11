@@ -86,55 +86,9 @@ void() player_type12  =[	$type12,	player_type13	] {};
 void() player_type13  =[	$type13,	player_type14	] {};
 void() player_type14  =[	$type14,	Player_Move	] {};
 
-void() player_usedoor1  =[	$usea1,	player_usedoor2	]
-{self.owner.lock_finished = time + 0.6;self.owner.turnlock_finished = time + 0.6;};
-void() player_usedoor2  =[	$usea2,	player_usedoor3	] {};
-void() player_usedoor3  =[	$usea3,	player_usedoor4	] {};
-void() player_usedoor4  =[	$usea4,	player_usedoor5	] {self.usebutton_finished = time + 0.2;};
-void() player_usedoor5  =[	$usea5,	player_usedoor6	] {};
-void() player_usedoor6  =[	$usea6,	player_usedoor7	] {};
-void() player_usedoor7  =[	$usea7,	Player_Move	] {};
+
 
 void() button_fire;
-void() player_usebutton1  =[	$usea1,	player_usebutton2	]
-{self.owner.lock_finished = time + 0.6;self.owner.turnlock_finished = time + 0.6;};
-void() player_usebutton2  =[	$usea2,	player_usebutton3	] {};
-void() player_usebutton3  =[	$usea3,	player_usebutton4	] {};
-void() player_usebutton4  =[	$usea4,	player_usebutton5	] 
-{
-	local	vector	source;
-	local entity      stemp, y;
-	
-	makevectors (self.angles);
-	source = self.origin + '0 0 16';
-	traceline (source, source + v_forward*35, FALSE, self);
-	if (trace_fraction == 1.0)
-		return;
-
-	if (trace_ent.classname == "button")
-	{
-		stemp = self;
-		self = trace_ent;
-		// used by the button
-		self.enemy = stemp;
-		button_fire();
-		self = stemp;
-	}
-};
-void() player_usebutton5  =[	$usea5,	player_usebutton6	] {};
-void() player_usebutton6  =[	$usea6,	player_usebutton7	] {};
-void() player_usebutton7  =[	$usea7,	Player_Move	] {};
-
-void() player_pickup1  =[	$useb1,	player_pickup2	] 
-{self.owner.lock_finished = time + 0.8;self.owner.turnlock_finished = time + 0.8;};
-void() player_pickup2  =[	$useb2,	player_pickup3	] {};
-void() player_pickup3  =[	$useb3,	player_pickup4	] {};
-void() player_pickup4  =[	$useb4,	player_pickup5	] {};
-void() player_pickup5  =[	$useb5,	player_pickup6	] {self.getitem_finished = time + 0.1;};
-void() player_pickup6  =[	$useb6,	player_pickup7	] {};
-void() player_pickup7  =[	$useb7,	player_pickup8	] {};
-void() player_pickup8  =[	$useb8,	player_pickup9	] {};
-void() player_pickup9  =[	$useb9,	Player_Move	] {};
 
 void() player_stab1	=[	$stab1,	player_stab2	] 
 {W_FireKnife();};

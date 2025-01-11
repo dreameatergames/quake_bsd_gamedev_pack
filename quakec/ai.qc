@@ -212,16 +212,10 @@ float() FindTarget =
 
 	while (hate)
 	{
-		if (self.zombie_onground == TRUE && self.classname == "zombie")
-		{
-			if (visible(hate) && range(hate) <= RANGE_NEAR) // ambush zombies
-				break;
-		}
-		else
-		{
-			if (infront(hate) && visible(hate))
-				break;
-		}
+
+		if (infront(hate) && visible(hate))
+			break;
+
 		hate = find(hate, teams, self.enemyteam);
 	}
 
@@ -234,9 +228,6 @@ float() FindTarget =
 		if (hate.owner.flags & FL_NOTARGET)
 			return FALSE;
 	}
-
-	if (hate.zombie_onground == TRUE) // don't attack ambush zombies
-		return FALSE;
 
 	self.enemy = hate;
 	FoundTarget ();
@@ -442,7 +433,7 @@ void() ai_stand =
 			check_friendly();
 
 		// ai looks around
-		if (random() < 0.1 && !self.zombie_onground && self.flags & FL_ONGROUND && self.noturn == FALSE)
+		if (random() < 0.1 && self.flags & FL_ONGROUND && self.noturn == FALSE)
 		{
 			if (random() < 0.5)
 				self.ideal_yaw = self.angles_y + (crandom()*360);
@@ -751,8 +742,6 @@ void() walkmonster_start_go =
 	if (!self.yaw_speed)
 		self.yaw_speed = 20;
 	self.view_ofs = '0 0 25';
-	if (!self.mode)
-		droptofloor();
 	
 	self.flags = self.flags | FL_MONSTER;
 	self.th_stand (); // start thinking

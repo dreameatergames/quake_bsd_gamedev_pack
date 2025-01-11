@@ -45,7 +45,7 @@ void() plat_spawn_inside_trigger =
 void() plat_hit_top =
 {
 	sound (self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
-	self.state = STATE_TOP;
+	self.state = STATE_RAISED;
 	self.think = plat_go_down;
 	self.nextthink = self.ltime + 3;
 };
@@ -53,7 +53,7 @@ void() plat_hit_top =
 void() plat_hit_bottom =
 {
 	sound (self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
-	self.state = STATE_BOTTOM;
+	self.state = STATE_LOWERED;
 };
 
 void() plat_go_down =
@@ -86,7 +86,7 @@ void() plat_center_touch =
 		return;
 
 	self = self.enemy;
-	if (self.state == STATE_BOTTOM)
+	if (self.state == STATE_LOWERED)
 	{
 		if (self.frags < 3)
 			self.frags = self.frags + 1 * frametime; // frametime to fix low framerate timing issues
@@ -97,7 +97,7 @@ void() plat_center_touch =
 		}
 		return;
 	}
-	if (self.state == STATE_TOP)
+	if (self.state == STATE_RAISED)
 	{
 		if (self.frags < 200)
 			self.frags = self.frags + 1;
@@ -123,7 +123,7 @@ void() plat_crush =
 	
 	if (self.state == STATE_UP)
 		plat_go_down ();
-	else if (self.state == STATE_DOWN)
+	else if (self.state == STATE_LOWERED)
 		plat_go_up ();
 	else
 		objerror ("plat_crush: bad self.state\n");
@@ -216,7 +216,7 @@ local entity t;
 	else
 	{
 		setorigin (self, self.pos2);
-		self.state = STATE_BOTTOM;
+		self.state = STATE_LOWERED;
 	}
 };
 
@@ -227,9 +227,6 @@ void() func_train_find;
 
 void() train_blocked =
 {
-	if (time < self.lock_finished)
-		return;
-	self.lock_finished = time + 0.5;
 	T_Damage (other, world, world, self.dmg);
 };
 void() train_use =

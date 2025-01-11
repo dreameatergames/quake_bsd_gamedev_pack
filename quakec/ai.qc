@@ -1,5 +1,4 @@
 void() SUB_Remove;
-.entity friend;
 .float ai_angry; // AI is angry at ally and attacks
 .float following; // boolean
 entity	sight_entity;
@@ -96,42 +95,11 @@ void() HuntTarget =
 	self.ideal_yaw = vectoyaw(self.enemy.origin - self.origin);
 	self.nextthink = time + 0.1;
 };
-
-void() FollowFriendly =
-{
-	local float r;
-
-	if (self.goalentity.classname == "plat")
-		return;
-
-	r = range (self.friend);
-
-	self.following = TRUE;
-	self.goalentity = self.friend;
-	self.think = self.th_run;
-	if (r == RANGE_MELEE)
-		self.ideal_yaw = vectoyaw(self.friend.origin - self.origin); // avoid if too close
-	else
-		self.ideal_yaw = vectoyaw(self.friend.origin - self.origin); // else, follow
-	self.nextthink = time + 0.1;
-};
  
 void() FoundTarget =
 {
 	local entity stemp;
-
-//	if (self.teams == "human")
-//	{
-//		if (self.enemy.teams != "human") // shout taunt at enemy
-//			soldier_speak(0); - replace with other variable
-//		else // human team member was betrayed
-//		{
-//			self.friend = world;
-//			self.voice_finished = time;
-//			soldier_speak(8); - replace with other variable
-//		}
-//	}
-//	HuntTarget ();
+	HuntTarget ();
 };
 
 /*
@@ -161,287 +129,9 @@ void() ai_quickturn =
 	}
 };
 
-void() FindFriendly =
-{
-	local entity love;
-
-	// have soldiers follow player
-	love = find(world, classname, "player");
-	while (love)
-	{
-		if (visible(love) && infront(love) && love.health > 0)
-		{
-			if (!self.enemy)
-// 				soldier_speak(4); - replace with other variable
-			self.friend = love;
-			FollowFriendly();
-			return;
-		}
-		love = find(love, classname, "player");
-	}
-};
-
-
-// ==============
-// FindTarget
-// ===============
-
-.float lasthate_time;
-.string enemyteam;
-float() FindTarget =
-{
-	local entity hate, y;
-
-	hate = find(world, teams, self.enemyteam);
-
-	// soldier does a radius seach for worms around him
-	if (self.teams == "human")
-	{
-		y = findradius(self.origin + v_up * 4, 80);
-		while (y)
-		{
-			if (y.classname == "worm" && y.health > 0 && visible(y))
-			{
-				self.enemy = y;
-				FoundTarget ();
-				return TRUE;
-			}
-			y = y.chain;
-		}
-	}
-
-	while (hate)
-	{
-
-		if (infront(hate) && visible(hate))
-			break;
-
-		hate = find(hate, teams, self.enemyteam);
-	}
-
-	if (hate == self.enemy)
-		return FALSE;
-	if (hate.health <= 0)
-		return FALSE;
-	if (hate.classname == "player")
-	{
-		if (hate.owner.flags & FL_NOTARGET)
-			return FALSE;
-	}
-
-	self.enemy = hate;
-	FoundTarget ();
-	return TRUE;
-};
-
 void() ai_stand;
-void() check_friendly = // soldiers do a check up on corporal almost every frame
-{
-	local float r;
-
-	if (self.friend.pain_finished > time && visible(self.friend))
-	{
-		if (!self.enemy && self.friend.attacker.teams != "human")
-		{
-			self.enemy = self.friend.attacker;
-			FoundTarget ();
-			return;
-		}
-	}
-
-	if (self.friend.health <= 0)
-	{
-		if (self.teams == "human" && visible(self.friend))
-//			soldier_speak(6); - replace with other variable
-
-		self.friend = world;
-		self.following = FALSE;
-		if (!visible(self.enemy))
-			self.th_stand();
-		return;
-	}
-
-	if (self.following == TRUE)
-	{
-		r = range (self.friend);
-		if (r == RANGE_CLOSE)
-		{
-			self.following = FALSE;
-			self.th_stand();
-			return;
-		}
-	}
-	else if (self.orders != AI_WAIT)
-	{
-		r = range (self.friend);
-		if (r != RANGE_CLOSE)
-			FollowFriendly();			
-	}
-};
-
-.float searchteam;
-void() ai_targetsearch =
-{
-	if (!self.friend && self.teams == "human" && self.ai_angry == FALSE)
-		FindFriendly();
-
-	if (self.searchteam == 0)
-	{
-		// Search #1
-		if (self.teams == "human")
-			self.enemyteam = "envenom"; // human vs envenom
-		else if (self.teams == "envenom")
-			self.enemyteam = "baeloth"; // envenom vs baeloth
-		else if (self.teams == "baeloth")
-			self.enemyteam = "robot"; // baeloth vs robot
-		else if (self.teams == "robot")
-			self.enemyteam = "envenom"; // robot vs envenom
-		if (FindTarget())
-			return;
-	}
-	else if (self.searchteam == 1)
-	{
-		// Search #2
-		if (self.teams == "human")
-			self.enemyteam = "baeloth"; // human vs baeloth
-		else if (self.teams == "envenom")
-			self.enemyteam = "human"; // envenom vs human
-		else if (self.teams == "baeloth")
-			self.enemyteam = "envenom"; // baeloth vs envenom
-		else if (self.teams == "robot")
-			self.enemyteam = "human"; // robot vs human
-		if (FindTarget())
-			return;
-	}
-	else if (self.searchteam == 2)
-	{
-		// Search #3
-		if (self.teams == "human")
-			self.enemyteam = "robot"; // human vs robot
-		else if (self.teams == "envenom")
-			self.enemyteam = "robot"; // envenom vs robot
-		else if (self.teams == "baeloth")
-			self.enemyteam = "human"; // baeloth vs human
-		else if (self.teams == "robot")
-			self.enemyteam = "baeloth"; // robot vs baeloth
-		if (FindTarget())
-			return;
-	}
-
-	if (self.searchteam < 2)
-		self.searchteam = self.searchteam + 1;
-	else
-		self.searchteam = 0;
-};
-
-float() CheckAttack =
-{
-	local	vector	source;
-	local float r;
-
-	makevectors (self.angles);
-
-	source = self.origin + '0 0 16';
-	traceline (source, source + v_forward*99999, FALSE, self);
-	if (trace_fraction == 1)
-		return FALSE;
-
-	if (trace_ent.takedamage && trace_ent.health > 0)
-	{
-		r = range(self.enemy);
-
-		if (self.teams == trace_ent.teams && self.ai_angry == FALSE)
-			return FALSE;
-		else
-		{
-			ai_face();
-			self.hostile_finished = time + 1;
-			if (r == RANGE_MELEE)
-			{
-				if (self.th_melee)
-				{
-					if (self.teams == "human")
-					{
-						if (self.th_missile)
-							self.th_missile();
-						return TRUE;
-					}
-					else
-					{
-						self.th_melee();
-						return TRUE;
-					}
-				}
-				else // lack of melee attack
-				{
-					if (self.th_missile)
-						self.th_missile();
-					return TRUE;
-				}
-			}
-			if (r > RANGE_MELEE)
-			{
-				if (self.th_missile)
-				{
-					self.th_missile();
-					return TRUE;
-				}
-			}
-		}
-	}
-	return FALSE; // can't attack
-};
 
 .float	lefty;
-void() ai_strafe =
-{
-	local float	ofs;
-
-	ai_face();
-
-	if (self.lefty) ofs = 90;
-	else ofs = -90;
-
-
-	self.lefty = 1 - self.lefty;
-
-	walkmove (self.ideal_yaw - ofs, 45);
-
-};
-
-void() ai_stand =
-{
-	if (!walkmove(0,0))
-	{
-		if (self.classname != "worm")
-		{
-			dprint ("monster stuck or in void at: ");
-			dprint (vtos(self.origin));
-			dprint ("\n");
-		}
-	}
-
-	if (self.enemy)
-	{
-		ai_face();
-		if (CheckAttack())
-			return;
-	}
-	else
-	{
-		if (self.friend)
-			check_friendly();
-
-		// ai looks around
-		if (random() < 0.1 && self.flags & FL_ONGROUND && self.noturn == FALSE)
-		{
-			if (random() < 0.5)
-				self.ideal_yaw = self.angles_y + (crandom()*360);
-			ChangeYaw();
-		}
-	}
-	ai_targetsearch();
-};
 
 void() CheckTouch =
 {
@@ -471,12 +161,18 @@ void() ai_jump =
 	}
 };
 
+void() soldier_jumpa1;
 void() check_for_ledge =
 {
 	local vector spot;
 
 	makevectors (self.angles);
 	spot = self.origin + (v_forward * 35 - v_up * 35);
+	if (pointcontents(spot) == CONTENT_EMPTY)
+	{
+		if (self.classname == "soldier")
+			soldier_jumpa1();
+	}
 	if (self.jump_finished < time)
 		self.velocity = v_forward * 235;
 };
@@ -509,7 +205,7 @@ void(float dist) ai_run =
 
 		r = range(self.goalentity);
 
-		if (self.goalentity.enemy.state == STATE_BOTTOM)
+		if (self.goalentity.enemy.state == STATE_LOWERED)
 		{
 			if (r > RANGE_CLOSE)
 			{
@@ -525,7 +221,7 @@ void(float dist) ai_run =
 				return;			
 			}
 		}
-		if (self.goalentity.enemy.state == STATE_TOP)
+		if (self.goalentity.enemy.state == STATE_RAISED)
 		{
 			if (r < RANGE_CLOSE)
 			{
@@ -543,7 +239,7 @@ void(float dist) ai_run =
 	}
 
 	// the monster here is trying it's hardest to find it's enemy again
-	if (!self.enemy && self.ai_poscheck != world && self.ai_poscheck_touched == TRUE && self.teams != "human")
+	if (!self.enemy && self.ai_poscheck != world && self.ai_poscheck_touched == TRUE)
 	{
 		if (self.search_count >= 40)
 		{
@@ -561,23 +257,9 @@ void(float dist) ai_run =
 		if (self.enemy.health <= 0)
 		{
 			self.ai_angry = FALSE; // avoid shooting teammates
-			if (self.teams == "human" && visible(self.enemy))
-// 				soldier_speak(5); - replace with other variable
 			self.enemy = world;
 			self.th_stand();
-			if (self.friend && visible(self.friend))
-				FollowFriendly();
 			return;
-		}
-
-		if (self.enemy.classname == "worm" && self.teams == "human") // tell soldier to step on worm
-		{
-			r = range(self.enemy);
-			if (r < RANGE_CLOSE && visible(self.enemy))
-			{
-				self.th_melee();
-				return;
-			}
 		}
 
 		if (!visible(self.enemy))
@@ -613,69 +295,9 @@ void(float dist) ai_run =
 			ai_face();
 		}
 
-		// strafing routines
-		if (self.enemy.hostile_finished > time && infront(self.enemy) && visible(self.enemy))
-		{
-			r2 = random();
-			if (r2 > 0.6)
-			{
-				if (self.teams == "baeloth")
-					ai_strafe();
-				return;
-			}
-		}
-
-		//
-		// combat
-		//
-
 		if (CheckAttack())
 			return;
 	}
-	else if (self.friend)
-	{
-		if (!visible(self.friend))
-		{
-			if (self.following == TRUE)
-			{
-				check_for_ledge(); // Soldiers are able to jump off ledges like Corporal
-				if (!self.ai_poscheck) // the soldier here is recording the last position and angle he saw the player
-				{
-					check = spawn();
-					check.movetype = MOVETYPE_NONE;
-					check.solid = SOLID_TRIGGER;
-					setmodel (check, string_null);
-					check.touch = CheckTouch;
-					check.angles_y = self.friend.angles_y;
-					setsize (check, '-16 -16 0', '16 16 56');
-					setorigin (check, self.friend.origin);
-					self.search_count = 0;
-					self.ideal_yaw = vectoyaw(check.origin - self.origin);
-					self.ai_poscheck = check;
-					self.goalentity = self.ai_poscheck;
-					ai_quickturn();
-				}
-				if (self.search_count >= 80)
-				{
-					if (self.ai_poscheck) // remove the recorded entity because the soldier saw corporal again
-					{
-						self.ai_poscheck.think = SUB_Remove;
-						self.ai_poscheck.nextthink = time + 0.1;
-						self.ai_poscheck_touched = FALSE;
-						self.goalentity = world;
-						self.ai_poscheck = world;
-					}
-					self.search_count = 0;
-// 					soldier_speak(7); - replace with other variable
-					self.friend = world;
-					self.th_stand();
-					return;
-				}
-			}
-			self.search_count = self.search_count + 1;
-		}
-		else
-		{
 			if (self.ai_poscheck) // remove the recorded entity because the soldier saw corporal again
 			{
 				self.ai_poscheck.think = SUB_Remove;
@@ -742,6 +364,8 @@ void() walkmonster_start_go =
 	if (!self.yaw_speed)
 		self.yaw_speed = 20;
 	self.view_ofs = '0 0 25';
+	if (!self.mode)
+		droptofloor();
 	
 	self.flags = self.flags | FL_MONSTER;
 	self.th_stand (); // start thinking

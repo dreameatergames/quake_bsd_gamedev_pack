@@ -11,23 +11,15 @@
 ../progs.dat                                        // Output File
 
 Defs.QC                                             // Definitions
-Subs.qc                                             // Math Stuff
+// AI.QC
+Subs.qc
 Main.QC                                             // Main subroutines
-
 Client.QC                                           // Client subroutines
-
-ai.qc                                               // Monster ai
-doors.qc
-damage.qc                                           // Damage Math
-buttons.qc                                          // Buttons
 weapons.qc
+doors.qc
+plats.QC                                            // Platforms
 
-plats.qc                                            // Moving Platforms
-triggers.qc                                         // Entity Triggers
-
-
-
-// Dummys.QC                                           // Null spawn functions
+Dummys.QC                                           // Null spawn functions
 Entities/Internal.QC                                // Entity Management
 Entities/Lights.QC                                  // Light Entities
 Entities/Ambient.QC                                 // Ambient Sounds

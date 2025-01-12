@@ -397,5 +397,12 @@ void(entity client, string s) sprint		= #24;
 
 .float state;
 entity	damage_attacker;	// set by T_Damage
+float() crandom =
+{
+	return 2*(random() - 0.5);
+};
+
+float developer;
+.float closed; // boolean for if a door is permanently shut
 // End
 

@@ -19,6 +19,7 @@ weapons.qc
 buttons.qc
 doors.qc
 plats.QC                                            // Platforms
+triggers.qc
 
 Dummys.QC                                           // Null spawn functions
 Entities/Internal.QC                                // Entity Management

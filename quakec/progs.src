@@ -10,18 +10,17 @@
 
 ../progs.dat                                        // Output File
 
-Defs.QC                                             // Definitions
-// AI.QC
-Subs.qc
-Main.QC                                             // Main subroutines
-Client.QC                                           // Client subroutines
-weapons.qc
-buttons.qc
-doors.qc
-plats.QC                                            // Platforms
-triggers.qc
+defs.QC                                             // Definitions
+subs.qc                                             // Math subroutines
+main.QC                                             // Main subroutines
+client.QC                                           // Client subroutines
+damage.qc                                           // Damage subroutines
+buttons.qc                                          // Button Triggers (Might not Work)
+doors.qc                                            // Door Entities
+plats.QC                                            // Platform Entities
+triggers.qc                                         // Trigger Entities
 
-Dummys.QC                                           // Null spawn functions
-Entities/Internal.QC                                // Entity Management
-Entities/Lights.QC                                  // Light Entities
-Entities/Ambient.QC                                 // Ambient Sounds
+dummys.QC                                           // Null spawn functions
+entities/internal.QC                                // Entity Management
+entities/lights.QC                                  // Light Entities
+entities/ambient.QC                                 // Ambient Sounds

@@ -20,7 +20,6 @@ void() trap_shooter             = {remove(self);};
 void() func_bossgate            = {remove(self);};
 void() func_episodegate         = {remove(self);};
 void() func_illusionary         = {remove(self);};
-void() func_button              = {remove(self);};
 void() func_door_secret         = {remove(self);};
 void() func_wall                = {remove(self);};
 void() info_intermission        = {remove(self);};

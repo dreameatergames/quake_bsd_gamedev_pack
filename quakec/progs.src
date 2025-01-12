@@ -16,6 +16,7 @@ Subs.qc
 Main.QC                                             // Main subroutines
 Client.QC                                           // Client subroutines
 weapons.qc
+buttons.qc
 doors.qc
 plats.QC                                            // Platforms
 
